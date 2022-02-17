@@ -1,7 +1,9 @@
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
 
-
+function getRandom(random){
+    return Math.ceil(Math.random() * random);
+}
 
 // TASK 0
 const player1 = {
@@ -25,19 +27,13 @@ const player2 = {
     },
 };
 
-function getRandom(random){
-    return Math.ceil(Math.random() * random);
-}
-
 function createElement(tag, className){
     const $tag = document.createElement(tag);
     if(className){
           $tag.classList.add(className);  
     }
-
     return $tag;
 }
-
 
 function createPlayer(playerObj) {
     // Создание элементов, поик класса
@@ -66,15 +62,12 @@ function createPlayer(playerObj) {
 
 function changeHP(player){
     const $playerLife = document.querySelector('.player'+player.player+' .life');
-    if(player.hp > 0){
-        player.hp -= getRandom(20);
-    $playerLife.style.width = player.hp + '%';
-    } else if(player.hp <= 0){
-        player.hp = 0;
+    player.hp -= getRandom(20);
+    if(player.hp <= 0){
         $arenas.appendChild(playerLose(player.name));
         $randomButton.disabled = true;
-    }
-    console.log(player.hp);
+    } 
+    $playerLife.style.width = player.hp + '%';
 }
 
 function playerLose(name){
@@ -84,10 +77,8 @@ function playerLose(name){
 }
 
 $randomButton.addEventListener('click', function(){
-    console.log('####: Click Random Button');
     changeHP(player1);
     changeHP(player2);
-    
 })
 
 $arenas.appendChild(createPlayer(player1));
