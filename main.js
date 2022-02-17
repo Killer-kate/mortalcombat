@@ -65,6 +65,7 @@ function changeHP(player){
     player.hp -= getRandom(20);
     if(player.hp <= 0){
         $arenas.appendChild(playerLose(player.name));
+        player.hp =0;
         $randomButton.disabled = true;
     } 
     $playerLife.style.width = player.hp + '%';
