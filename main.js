@@ -1,8 +1,6 @@
-import{player1, player2, createPlayer, arenasBlock} from './game-objects.js';
-import{ generateLogs, generateTimeString, chatBlock } from './game-create.js';
-import{ getTime, getRandomNumber, createHTMLElement } from './utils.js';
-import{renderPlayerWin, enemyAttack, playerAttack, showResult, createReloadButton, formFight} from './game-logic.js';
-import{ATTACK, HIT,} from './constants.js';
+import{player1, player2, createPlayer} from './game-objects.js';
+import{ generateLogs} from './game-create.js';
+import{enemyAttack, playerAttack, showResult, formFight} from './game-logic.js';
 
 createPlayer('player1', player1);
 createPlayer('player2', player2);
