@@ -14,7 +14,6 @@ class Game {
         this.player1 = new Player({
             player: 1,
             name: 'XIAO',
-            hp: 20,
             img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
         });
 
