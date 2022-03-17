@@ -1,18 +1,5 @@
-import{generateTimeString} from './game-create.js';
-
-const getTime = () =>{
-    
-    const date = new Date();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-
-    const formattedDate = `${generateTimeString(hours)} : ${generateTimeString(minutes)} : ${generateTimeString(seconds)}`;
-    return formattedDate;
-}
-
-const getRandomNumber = (min = 1, max = 20)=> {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+const getRandomNumber = (num)=> {
+    return Math.ceil(Math.random() * num);
 };
 
 const createHTMLElement = (tag = 'div', classname, content) => {
@@ -29,4 +16,4 @@ const createHTMLElement = (tag = 'div', classname, content) => {
     return element;
 };
 
-export{ getTime, getRandomNumber, createHTMLElement }
+export{ getRandomNumber, createHTMLElement }
