@@ -46,4 +46,6 @@ const HIT = {
 
 const ATTACK = ["head", "body", "foot"];
 
+
+
 export{ATTACK, HIT, LOGS};

@@ -1,36 +1,74 @@
-import{LOGS} from './constants.js';
-import{getTime,getRandomNumber} from './utils.js';
+import { LOGS } from './constants.js';
+import { getRandomNumber } from './utils.js';
 
-const chatBlock = document.querySelector('.chat');
+class Logs {
+   constructor ({
+      chat,
+   }) {
+      this.root = chat;
+   }
 
-const generateLogs = (type, player1, player2, damage = 0) =>{
-   
+   generate = (player1Name, player2Name) => {
+      this.generateLogs('start', player1Name, player2Name)
+   }
 
-    const text = type.includes('start', 'draw') ? LOGS[type] : LOGS[type] [getRandomNumber(0, LOGS[type].length - 1)];
+   hit = (player1Name, player2Name, valueAttack, hp) => {
+      this.generateLogs('hit', player1Name, player2Name, valueAttack, hp)
+   }
 
-    const formattedDate = getTime();
+   defence = (player1Name, player2Name, valueAttack, hp) => {
+      this.generateLogs('defence', player1Name, player2Name, valueAttack, hp)
+   }
 
-    let logMessage = '';
+   draw = () => {
+      this.generateLogs('draw')
+   }
 
-    switch(type){
-        case 'start':
-            logMessage = `${formattedDate} - ${text}`.replace('[time]', formattedDate).replace('[player1]', player1.name).replace('[player2]', player2.name);
+   end = (player1Name, player2Name) => {
+      this.generateLogs('end', player1Name, player2Name)
+   }
+
+   generateLogs = (type, player1, player2, valueAttack, hp) => {
+      const time = new Date().toLocaleTimeString();
+
+      let element;
+      let text;
+
+      switch (type) {
+         case 'start':
+               text = LOGS[type]
+                  .replace('[player1]', player1)
+                  .replace('[player2]', player2)
+                  .replace('[time]', time);
             break;
-        case 'end':
-            logMessage = text.replace('[playerWins]', player1.name).replace('[playerLose]', player2.name);
+         case 'hit': 
+               text = LOGS[type][getRandomNumber(LOGS[type].length - 1)]
+                  .replace('[playerKick]', player1)
+                  .replace('[playerDefence]', player2) + 
+                   `<span class="damage">${valueAttack} HP</span> [${hp}/100]`;
             break;
-        case 'hit':
-            logMessage = `${formattedDate} - ${text} -${damage} [${player2.hp}/100]`.replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+         case 'defence':
+               text = LOGS[type][getRandomNumber(LOGS[type].length - 1)]
+                  .replace('[playerKick]', player1)
+                  .replace('[playerDefence]', player2) + 
+                   `<span class="defence">${valueAttack} HP</span> [${hp}/100]`;
             break;
-        case 'defence':
-            logMessage = `${formattedDate} - ${text}`.replace('[playerDefence]', player1.name).replace('[playerKick]', player2.name);
+         case 'draw':
+               text = LOGS[type];
             break;
-        default:
-            logMessage = text;
-    }
-    chatBlock.insertAdjacentHTML('afterbegin', `<p>${logMessage}</p>`);
+         case 'end':
+               text = LOGS[type][getRandomNumber(LOGS[type].length - 1)]
+                  .replace('[playerWins]', player1)
+                  .replace('[playerLose]', player2);
+            break;
+         default:
+            break;
+      }
+
+      element = `<p>[${time}] ${text}</p>` ;
+
+      this.root.insertAdjacentHTML('afterbegin', element);
+   };
 }
 
-const generateTimeString = (time) => time < 10 ? `0 ${time}` : time;
-
-export{ generateLogs, generateTimeString, chatBlock };
+export default Logs;

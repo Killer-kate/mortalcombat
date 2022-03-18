@@ -1,63 +1,61 @@
 import{createHTMLElement} from './utils.js';
 
-const arenasBlock = document.querySelector('.arenas');
-
-const player1 = {
-    player: 1,
-    name: 'XIAO',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon: ["Двуручный", "Одноручный", "Лук", "Копьё", "Книга"],
-    elHP,
-    changeHP,
-    renderHP
-};
-
-const player2 = {
-    player: 2,
-    name: 'MIKO',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
-    weapon: ["Двуручный", "Одноручный", "Лук", "Копьё", "Книга"],
-    elHP,
-    changeHP,
-    renderHP
-};
-
-const createPlayer = (playerName, {name, hp, img }) => {
-    const player = createPlayerMarkup(playerName, name, hp, img);
-
-    arenasBlock.appendChild(player);
-};
-
-function changeHP(value) {
-    this.hp -= value;
-
-    if (this.hp < 0) {
-        this.hp = 0;
+class Player {
+    constructor({player, name, hp, img}){
+        this.name = name;
+        this.hp = hp ? hp : 100;
+        this.img = img;
+        this.player = player;
+        this.selector = `player${this.player}`;
     }
+
+    changeHP = (value) => {
+        this.hp -= value;
+    
+        if (this.hp < 0) {
+            this.hp = 0;
+        }
+    }
+    
+    elHP = () => {
+        return document.querySelector(`.${this.selector} .life`);
+    }
+    
+     renderHP = () => {
+        this.elHP().style.width = `${this.hp}%`;
+    }
+
+    createPlayer = () => {
+        const arenasBlock = document.querySelector('.arenas');
+        const player = createHTMLElement('div', this.selector);
+        const progressbarEl = createHTMLElement('div', 'progressbar');
+        const characterEl = createHTMLElement('div', 'character');
+        const lifeEl = createHTMLElement('div', 'life');
+        const nameEl = createHTMLElement('div', 'name');
+        const imgEl = createHTMLElement('img');
+
+        imgEl.src = this.img;
+
+        lifeEl.style.width = this.hp + '%';
+        nameEl.innerText = this.name;
+
+        player.appendChild(progressbarEl);
+        player.appendChild(characterEl);
+
+        progressbarEl.appendChild(lifeEl);
+        progressbarEl.appendChild(nameEl);
+
+        characterEl.appendChild(imgEl);
+        
+        arenasBlock.appendChild(player);
+
+        return player;
+    };
+
+    doAttack = (hpValue) => {
+        this.changeHP(hpValue);
+        this.renderHP();
+    };
 }
 
-function elHP() {
-    return document.querySelector(`.player${this.player} .life`);
-}
-
-function renderHP() {
-    this.elHP().style.width =  `${this.hp}%`;
-}
-
-const createPlayerMarkup = (playerName, name, hp, pathToImg) => {
-    const lifeEl = createHTMLElement('div', 'life');
-    const nameEl = createHTMLElement('div', 'name', name);
-    const imgEl = createHTMLElement('img');
-
-    lifeEl.style.width = `${hp}%`;
-    imgEl.src = pathToImg;
-
-    const progressbarEl = createHTMLElement('div', 'progressbar', [lifeEl, nameEl]);
-    const characterEl = createHTMLElement('div', 'character', [imgEl]);
-
-    return createHTMLElement('div', playerName, [progressbarEl, characterEl]);
-};
-
-export{ player1, player2, createPlayer, createPlayerMarkup, arenasBlock };
+export default Player;
