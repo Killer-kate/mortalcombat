@@ -3,6 +3,9 @@ import { ATTACK, HIT } from './constants.js';
 import Player from './game-objects.js';
 import Logs from './game-create.js';
 
+let player1;
+let player2;
+
 class Game {
     constructor({
         root,
@@ -11,29 +14,39 @@ class Game {
         this.root = root;
         this.form = root.querySelector('.control');
 
-        this.player1 = new Player({
-            player: 1,
-            name: 'XIAO',
-            img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-        });
-
-        this.player2 = new Player({
-            player: 2,
-            name: 'MIKO',
-            img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
-        });
-
         this.logs = new Logs({ chat, })
     }
 
-    start = () => {
-        this.root.appendChild(this.player1.createPlayer());
-        this.root.appendChild(this.player2.createPlayer());
-
-        this.logs.generate(this.player1.name, this.player2.name);
+    start = async() => {
 
         this.submitResult();
+
+        const players = await this.lark();
+
+        let p1 = players[getRandomNumber(players.length) - 1];
+        let p2 = players[getRandomNumber(players.length) - 1];
+
+        player1 = new Player({
+            ...p1, 
+            player: 1,
+        });
+
+        player2 = new Player({
+            ...p2, 
+            player: 2,
+        });
+        
+        player1.createPlayer();
+        player2.createPlayer();
+
+        this.logs.generate(player1.name, player2.name);  
     }
+    
+    lark = async() => {
+        let response = await fetch('https://reactmarathon-api.herokuapp.com/api/mk/players')
+        .then(res => res.json());
+        return response;
+        };
 
     submitResult = () => {
         this.form.addEventListener('submit', (e) => {
